@@ -35,7 +35,6 @@
     <Compile Include="NuSpecValidator.fs"/>
     <Compile Include="DllValidator.fs"/>
     <Compile Include="Program.fs"/>
-
   </ItemGroup>
   
 </Project>
