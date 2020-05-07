@@ -1,13 +1,8 @@
 ﻿module Program
 
 open System
-open System.Configuration.Assemblies
-open System.Diagnostics
 open System.IO
-open System.Reflection
-open System.Security.Cryptography.X509Certificates
 open Argu
-open Fake.Core
 open Fake.IO
 
 
