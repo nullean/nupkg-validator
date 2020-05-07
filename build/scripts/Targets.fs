@@ -4,15 +4,14 @@ open Argu
 open System
 open Bullseye
 open CommandLine
-
-
-let private cmd (name:string) dependencies action = Targets.Target(name, dependencies, Action(action))
+open ProcNet
 
 let private bump (arguments:ParseResults<BumpArguments>) =
     
     printfn "bump version"
     
 let private build (arguments:ParseResults<Arguments>) =
+    let result = Proc.Exec ("dotnet", ["build"; "-c"; "Release"] |> List.toArray)
     
     printfn "build"
     
@@ -25,6 +24,8 @@ let private publish (arguments:ParseResults<Arguments>) =
     printfn "publish"
 
 let Setup (parsed:ParseResults<Arguments>) (subCommand:Arguments) =
+    let cmd (name:string) dependencies action = Targets.Target(name, dependencies, Action(action))
+
     cmd BumpArguments.Name [] <| fun _ ->
         match subCommand with | Bump b -> bump b | _ -> failwithf "bump needs bump args"
     cmd Build.Name [] <| fun _ -> build parsed
