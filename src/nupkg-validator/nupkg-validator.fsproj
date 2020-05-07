@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>NupkgValidations</RootNamespace>
+        <Version>1.1.0-alpha1</Version>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="NuSpecValidator.fs" />
+        <Compile Include="DllValidator.fs" />
+        <Compile Include="Program.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Argu" Version="6.0.0" />
+        <PackageReference Include="Fake.IO.Zip" Version="5.15.0" />
+        <PackageReference Include="Fake.Core.SemVer" Version="5.15.0" />
+    </ItemGroup>
+
+</Project>
