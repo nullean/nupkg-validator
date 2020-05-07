@@ -1,22 +1,41 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>NupkgValidations</RootNamespace>
-        <Version>1.1.0-alpha1</Version>
-    </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>netcoreapp3.0;netcoreapp3.1</TargetFrameworks>
+    <AssemblyName>nupkg-validator</AssemblyName>
+    <RootNamespace>NupkgValidations</RootNamespace>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>nupkg-validator</ToolCommandName>
 
-    <ItemGroup>
-        <Compile Include="NuSpecValidator.fs" />
-        <Compile Include="DllValidator.fs" />
-        <Compile Include="Program.fs" />
-    </ItemGroup>
+    <PackageIcon>nuget-icon.png</PackageIcon>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/nullean/nupkg-validator</PackageProjectUrl>
+    <PackageReleaseNotes>https://github.com/nullean/nupkg-validator/releases</PackageReleaseNotes>
 
-    <ItemGroup>
-        <PackageReference Include="Argu" Version="6.0.0" />
-        <PackageReference Include="Fake.IO.Zip" Version="5.15.0" />
-        <PackageReference Include="Fake.Core.SemVer" Version="5.15.0" />
-    </ItemGroup>
+    <Title>nupkg-validator: a dotnet tool to validate NuGet packages</Title>
+    <Description>Validates a NuGet packages, are dlls in Release Mode, do they have the right version and public key?</Description>
 
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Argu" Version="6.0.0"/>
+    <PackageReference Include="Fake.IO.Zip" Version="5.15.0"/>
+    <PackageReference Include="Fake.Core.SemVer" Version="5.15.0"/>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\nuget-icon.png" CopyToOutputDirectory="PreserveNewest">
+      <Link>nuget-icon.png</Link>
+      <Pack>True</Pack>
+      <PackagePath>nuget-icon.png</PackagePath>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="NuSpecValidator.fs"/>
+    <Compile Include="DllValidator.fs"/>
+    <Compile Include="Program.fs"/>
+
+  </ItemGroup>
+  
 </Project>

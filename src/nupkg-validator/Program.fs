@@ -34,9 +34,7 @@ let runValidation (parsed:ParseResults<Arguments>) =
     let nuGetPackagePath = parsed.GetResult NuGetPackagePath |> Path.GetFullPath
     if not(File.Exists nuGetPackagePath) then failwithf "Package does not exist %s" nuGetPackagePath
     
-    let assemblyName =
-        let defaultName = System.IO.Path.GetFileNameWithoutExtension nuGetPackagePath
-        parsed.TryGetResult AssemblyNameToLookFor |> Option.defaultValue defaultName
+    let assemblyName = System.IO.Path.GetFileNameWithoutExtension nuGetPackagePath
     
     let tmp = Path.GetTempPath ()
     let tmpFolder = Directory.CreateDirectory(Path.Combine (tmp, assemblyName))
@@ -57,8 +55,12 @@ let runValidation (parsed:ParseResults<Arguments>) =
         | (_, true) -> failwithf "Package: %s, has dependencies where none were expected" assemblyName 
         | (deps, _) -> spec
         
-    let dlls = 
-        match tmpFolder.GetFiles("*.dll", SearchOption.AllDirectories) |> Seq.toList with
+    let dlls =
+        let searchFor =
+            match parsed.TryGetResult AssemblyNameToLookFor with
+            | Some s -> sprintf "%s.dll" s
+            | None -> "*.dll"
+        match tmpFolder.GetFiles(searchFor, SearchOption.AllDirectories) |> Seq.toList with
         | [] -> failwithf "No dlls found in %s" tmpFolder.FullName
         | head -> head
     

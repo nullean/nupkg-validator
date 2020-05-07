@@ -9,6 +9,8 @@ ProjectSection(SolutionItems) = preProject
 	global.json = global.json
 	LICENSE = LICENSE
 	nuget-icon.png = nuget-icon.png
+	.editorconfig = .editorconfig
+	version.json = version.json
 EndProjectSection
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "scripts", "build\scripts\scripts.fsproj", "{42B72CA3-F9F6-44DA-8642-657D2A5E1A81}"
