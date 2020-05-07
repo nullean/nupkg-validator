@@ -19,7 +19,7 @@ type Arguments =
     interface IArgParserTemplate with
         member s.Usage =
             match s with
-            | NuGetPackagePath _ -> "specify a known yaml test suite. defaults to `opensource`."
+            | NuGetPackagePath _ -> "Specify the path to the nuget package"
             | ExpectedVersion _ -> "The version we expect to be set for all dlls in the nuget package"
             | FixedVersion _ ->
                 "AssemblyInformationVersion should be the expected version but"
