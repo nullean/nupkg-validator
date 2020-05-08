@@ -10,6 +10,7 @@
 
     <PackageIcon>nuget-icon.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/nullean/nupkg-validator</RepositoryUrl>
     <PackageProjectUrl>https://github.com/nullean/nupkg-validator</PackageProjectUrl>
     <PackageReleaseNotes>https://github.com/nullean/nupkg-validator/releases</PackageReleaseNotes>
 
