@@ -37,7 +37,7 @@ let private release (arguments:ParseResults<Arguments>) =
     let toolRestore = exec "dotnet" ["tool"; "restore"]
     
     let currentVersion =
-        let r = Proc.Start("dotnet", "minver")
+        let r = Proc.Start("dotnet", "minver", "-d", "canary")
         let o = r.ConsoleOut |> Seq.find (fun l -> not(l.Line.StartsWith("MinVer:")))
         o.Line
     

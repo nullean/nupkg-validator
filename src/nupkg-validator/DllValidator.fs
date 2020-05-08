@@ -31,10 +31,20 @@ let Scan (dlls:FileInfo list) (tmpFolder:DirectoryInfo) version fixedVersion pub
         printfn "[version] Informational: %s" dllVersion.ProductVersion
         
         let a = assemblyVersion
+        // validate that AssemblyVersion only sets major version component
         if (fixedVersion && (a.Minor > 0 || a.Revision > 0 || a.Build > 0)) then
-            failwith (sprintf "[version] %s assembly version is not fixed to %i.0.0.0" relativePath a.Major)
-        if (SemVer.parse (dllVersion.ProductVersion) <> SemVer.parse version) then 
-            failwith <| sprintf "[version] Informational: %s to be set to expected: %s " dllVersion.ProductVersion version
+            failwith (sprintf "[version] %s AssemblyVersion is not fixed to %i.0.0.0" relativePath a.Major)
+            
+        // validate that AssemblyFileVersion is the expected version without prerelease info
+        let expectedFileVersion = 
+            let v = SemVer.parse dllVersion.FileVersion
+            sprintf "%i.%i.%i.0" v.Major v.Minor v.Patch
+        if (dllVersion.FileVersion <> expectedFileVersion) then
+            failwith (sprintf "[version] %s AssemblyFileVersion expected %s, actual: %s" relativePath expectedFileVersion dllVersion.FileVersion)
+         
+        // validate that AssemblyInformationVersion is the full expectedVersionString   
+        if (dllVersion.ProductVersion <> version) then 
+            failwith <| sprintf "[version] %s AsseblyInformationalVersion: expected: %s actual: %s " relativePath version dllVersion.ProductVersion
         
         match publicKey with
         | None -> ignore()

@@ -21,9 +21,7 @@ type Arguments =
             match s with
             | NuGetPackagePath _ -> "Specify the path to the nuget package"
             | ExpectedVersion _ -> "The version we expect to be set for all dlls in the nuget package"
-            | FixedVersion _ ->
-                "AssemblyInformationVersion should be the expected version but"
-                + " others should be fixated to nearest lowest major."
+            | FixedVersion _ -> "Make sure AssemblyVersion in dll is rounded down to the nearest major, defaults to true"
             | AssemblyNameToLookFor _ -> "The name of the assembly to look for in the nupkg, defaults to all"
             | PublicKey _ -> "The public key we expect the dlls to be signed with"
             
@@ -65,7 +63,7 @@ let runValidation (parsed:ParseResults<Arguments>) =
         | head -> head
     
     let version = parsed.GetResult ExpectedVersion 
-    let fixedVersion = parsed.TryGetResult FixedVersion |> Option.defaultValue false 
+    let fixedVersion = parsed.TryGetResult FixedVersion |> Option.defaultValue true 
     let publicKey = parsed.TryGetResult PublicKey
     
     DllValidator.Scan dlls tmpFolder version fixedVersion publicKey
