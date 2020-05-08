@@ -18,15 +18,20 @@ jobs:
   build:
     runs-on: ubuntu-18.04
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     - uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.201'
         source-url: https://nuget.pkg.github.com/nullean/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-    - run: ./build.sh release
-    - run: dotnet nuget push build/output/*.nupkg
+    - run: ./build.sh pristinecheck -s true
+      name: pristine check
+    - run: ./build.sh build -s true
+    - run: ./build.sh release -s true
+    - run: dotnet nuget push build/output/*.nupkg -k ${{secrets.GITHUB_TOKEN}}
       if: github.event_name == 'push' && startswith(github.ref, 'refs/heads')
     - run: dotnet nuget push build/output/*.nupkg -k ${{secrets.NUGET_ORG_API_KEY}} -s https://api.nuget.org/v3/index.json
       if: github.event_name == 'push' && startswith(github.ref, 'refs/tags')

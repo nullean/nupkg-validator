@@ -3,6 +3,7 @@ module Targets
 open Argu
 open System
 open Bullseye
+open Bullseye
 open CommandLine
 open Fake.Tools.Git
 open ProcNet
@@ -36,12 +37,17 @@ let private publish (arguments:ParseResults<Arguments>) =
     printfn "publish" 
 
 let Setup (parsed:ParseResults<Arguments>) (subCommand:Arguments) =
-    let cmd (name:string) dependencies action = Targets.Target(name, dependencies, Action(action))
-
+    let cmd (name:string) dependencies action =
+        let deps =
+            match (parsed.TryGetResult SingleTarget |> Option.defaultValue false) with
+            | true -> []
+            | _ -> dependencies
+        Targets.Target(name, [], Action(action))
+    
     cmd BumpArguments.Name [] <| fun _ ->
         match subCommand with | Bump b -> bump b | _ -> failwithf "bump needs bump args"
     cmd Build.Name [] <| fun _ -> build parsed
     
-    cmd "pristine-check" [] <| fun _ -> pristineCheck parsed
-    cmd Release.Name ["pristine-check"; Build.Name] <| fun _ -> release parsed
+    cmd PristineCheck.Name [] <| fun _ -> pristineCheck parsed
+    cmd Release.Name [PristineCheck.Name; Build.Name] <| fun _ -> release parsed
     cmd Publish.Name [Release.Name] <| fun _ -> publish parsed

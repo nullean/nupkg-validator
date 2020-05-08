@@ -10,7 +10,6 @@ ProjectSection(SolutionItems) = preProject
 	LICENSE = LICENSE
 	nuget-icon.png = nuget-icon.png
 	.editorconfig = .editorconfig
-	version.json = version.json
 	Directory.Build.props = Directory.Build.props
 	.github\workflows\ci.yml = .github\workflows\ci.yml
 EndProjectSection

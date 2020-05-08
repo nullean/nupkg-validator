@@ -26,6 +26,7 @@ let main argv =
         
         Targets.Setup parsed arguments
         let swallowTypes = [typeof<ProcExecException>; typeof<ExceptionExiter>]
+        
         Targets.RunTargetsAndExit
             ([target], (fun e -> swallowTypes |> List.contains (e.GetType()) ), ":")
         0
