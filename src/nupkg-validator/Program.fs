@@ -8,7 +8,7 @@ open Fake.IO
 
 type Arguments =
     | [<First; MainCommand; Mandatory; CliPrefix(CliPrefix.None)>] NuGetPackagePath of string
-    | [<AltCommandLine("-v"); Mandatory>]ExpectedVersion of string
+    | [<AltCommandLine("-v")>]ExpectedVersion of string 
     | [<AltCommandLine("-f")>]FixedVersion of bool
     | [<AltCommandLine("-a")>]AssemblyNameToLookFor of string
     | [<AltCommandLine("-k")>]PublicKey of string

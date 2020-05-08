@@ -2,10 +2,10 @@
   "version": 1,
   "isRoot": true,
   "tools": {
-    "nbgv": {
-      "version": "3.1.91",
+    "minver-cli": {
+      "version": "2.2.0",
       "commands": [
-        "nbgv"
+        "minver"
       ]
     }
   }
