@@ -3,7 +3,8 @@
   "inherit": false,
   "version": "0.1",
   "publicReleaseRefSpec": [
-    "^refs/tags/\\d+\\.\\d+.\\d+"
+    "^refs/tags/\\d+\\.\\d+",
+    "^refs/tags/v\\d+\\.\\d+"
   ],
   "nugetPackageVersion": {
     "semVer": 2
