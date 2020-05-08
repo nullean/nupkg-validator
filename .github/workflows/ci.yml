@@ -21,6 +21,10 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
+    - run: |
+        git fetch --prune --unshallow --tags
+        echo exit code $?
+        git tag --list
     - uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.201'
