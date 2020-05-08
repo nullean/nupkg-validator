@@ -45,4 +45,3 @@ let Setup (parsed:ParseResults<Arguments>) (subCommand:Arguments) =
     cmd "pristine-check" [] <| fun _ -> pristineCheck parsed
     cmd Release.Name ["pristine-check"; Build.Name] <| fun _ -> release parsed
     cmd Publish.Name [Release.Name] <| fun _ -> publish parsed
-

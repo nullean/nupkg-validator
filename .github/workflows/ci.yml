@@ -1,0 +1,31 @@
+name: Always be deploying
+
+on:
+  pull_request:
+    paths-ignore: 
+      - 'README.md'
+      - '.editorconfig'
+  push:
+    paths-ignore:
+      - 'README.md'
+      - '.editorconfig'
+    branches:
+      - master 
+    tags:
+      - "*.*.*"
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.201'
+        source-url: https://nuget.pkg.github.com/nullean/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+    - run: ./build.sh release
+      if: github.event_name == 'push' && startswith(github.ref, 'refs/heads')
+    - run: dotnet nuget push build/output/*.nupkg -k ${{secrets.NUGET_ORG_API_KEY}} -s https://api.nuget.org/v3/index.json
+      if: github.event_name == 'push' && startswith(github.ref, 'refs/tags')
