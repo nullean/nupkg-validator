@@ -26,6 +26,7 @@ jobs:
       env:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
     - run: ./build.sh release
+    - run: dotnet nuget push build/output/*.nupkg
       if: github.event_name == 'push' && startswith(github.ref, 'refs/heads')
     - run: dotnet nuget push build/output/*.nupkg -k ${{secrets.NUGET_ORG_API_KEY}} -s https://api.nuget.org/v3/index.json
       if: github.event_name == 'push' && startswith(github.ref, 'refs/tags')

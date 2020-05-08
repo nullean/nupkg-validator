@@ -89,15 +89,3 @@ let main argv =
             eprintfn "%s" e.Message
             Console.ResetColor()
             1
-           
-//
-//    !! (sprintf "%s/**/*.dll" tmpFolder)
-//    |> Seq.iter(fun dll ->
-//        let fv = FileVersionInfo.GetVersionInfo(dll)
-//        let a = AssemblyName.GetAssemblyName(dll).Version
-//        printfn "Assembly: %A AssemblyFile: %s Informational: %s => %s" a fv.FileVersion fv.ProductVersion dll
-//
-//        let assemblyName = System.Reflection.AssemblyName.GetAssemblyName(dll);
-//        if not <| assemblyName.FullName.Contains("PublicKeyToken=96c599bbe3e70f5d") then
-//            failwith <| sprintf "%s should have PublicKeyToken=96c599bbe3e70f5d" assemblyName.FullName
-    
