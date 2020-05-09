@@ -106,7 +106,7 @@ Asserts best practices are being [followed around open source libraries](https:/
 Noteworthy is that the `AssemblyVersion` is expected to be `Major.0.0.0`, if you don't follow this pattern use `--notmajoronly`
 
 ```bat
-dotnet nupkg-validator  build/output/nupkg-validator*.nupkg -v 0.2.1-canary.0.9 --notmajoronly
+dotnet nupkg-validator  build/output/nupkg-validator*.nupkg -v 0.2.1-canary.0.9 --notmajoronly true
 ```
 
 ##### Validate strong name
