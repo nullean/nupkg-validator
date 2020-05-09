@@ -2,6 +2,7 @@
 
 open System
 open System.IO
+open System.IO
 open Argu
 open Fake.IO
 
@@ -11,6 +12,7 @@ type Arguments =
     | [<AltCommandLine("-v")>]ExpectedVersion of string 
     | [<AltCommandLine("-f")>]FixedVersion of bool
     | [<AltCommandLine("-a")>]AssemblyNameToLookFor of string
+    | [<AltCommandLine("-d")>]DllsToSkip of string
     | [<AltCommandLine("-k")>]PublicKey of string
     
     // validations
@@ -22,8 +24,10 @@ type Arguments =
             | NuGetPackagePath _ -> "Specify the path to the nuget package"
             | ExpectedVersion _ -> "The version we expect to be set for all dlls in the nuget package"
             | FixedVersion _ -> "Make sure AssemblyVersion in dll is rounded down to the nearest major, defaults to true"
-            | AssemblyNameToLookFor _ -> "The name of the assembly to look for in the nupkg, defaults to all"
             | PublicKey _ -> "The public key we expect the dlls to be signed with"
+            
+            | AssemblyNameToLookFor _ -> "The name of the assembly to look for in the nupkg, defaults to all"
+            | DllsToSkip _ -> "Comma separated list of strings of dlls file names to skip, defaults to none"
             
             | NoDependencies _ -> "Assert the package has NO dependencies"
             
@@ -58,15 +62,30 @@ let runValidation (parsed:ParseResults<Arguments>) =
             match parsed.TryGetResult AssemblyNameToLookFor with
             | Some s -> sprintf "%s.dll" s
             | None -> "*.dll"
-        match tmpFolder.GetFiles(searchFor, SearchOption.AllDirectories) |> Seq.toList with
+        let dlls = tmpFolder.GetFiles(searchFor, SearchOption.AllDirectories) |> Seq.toList
+        match dlls  with
         | [] -> failwithf "No dlls found in %s" tmpFolder.FullName
         | head -> head
+      
+        
+    let skipDlls =
+        let parsed = parsed.TryGetResult DllsToSkip |> Option.defaultValue ""
+        parsed.Split(",", StringSplitOptions.RemoveEmptyEntries) |> Seq.toList
     
-    let version = parsed.GetResult ExpectedVersion 
+    let version = parsed.TryGetResult ExpectedVersion 
     let fixedVersion = parsed.TryGetResult FixedVersion |> Option.defaultValue true 
     let publicKey = parsed.TryGetResult PublicKey
     
-    DllValidator.Scan dlls tmpFolder version fixedVersion publicKey
+    DllValidator.Scan dlls tmpFolder version fixedVersion publicKey skipDlls
+    
+    let filteredAll = skipDlls.Length > 0 && dlls |> List.filter (fun dll -> not (DllValidator.DllFilter skipDlls dll)) |> List.length = 0
+    if filteredAll then
+       Console.ForegroundColor <- ConsoleColor.Blue
+       printfn ""
+       printfn "WARNING filter -d skipped ALL dlls for validation!"
+       printfn ""
+       Console.ResetColor()
+    
     
     
 
@@ -81,7 +100,9 @@ let main argv =
     match parsed with
     | None -> 2
     | Some p ->
-        try runValidation p
+        try
+            runValidation p
+            0
         with e ->
             Console.ForegroundColor <- ConsoleColor.Red
             eprintfn "%s" e.Message
