@@ -29,19 +29,8 @@ type Arguments =
             
             | AssemblyNameToLookFor _ -> "Filter for dll(s) with this AssemblyName"
             | DllsToSkip _ -> "Filter, comma separated list of strings of dlls file names to skip, defaults to none"
-            
 
-let runValidation (parsed:ParseResults<Arguments>) =
-    let nuGetPackagePath = parsed.GetResult NuGetPackagePath |> Path.GetFullPath
-    if not(File.Exists nuGetPackagePath) then failwithf "Package does not exist %s" nuGetPackagePath
-    
-    let assemblyName = System.IO.Path.GetFileNameWithoutExtension nuGetPackagePath
-    
-    let tmp = Path.GetTempPath ()
-    let tmpFolder = Directory.CreateDirectory(Path.Combine (tmp, assemblyName))
-    printfn "Temp output folder: %s" tmpFolder.FullName
-    
-    Zip.unzip tmpFolder.FullName nuGetPackagePath
+let private runSteps (parsed:ParseResults<Arguments>) (tmpFolder:DirectoryInfo) assemblyName =
     
     let specFile =
         match tmpFolder.GetFiles("*.nuspec", SearchOption.TopDirectoryOnly) |> Seq.toList with
@@ -84,9 +73,22 @@ let runValidation (parsed:ParseResults<Arguments>) =
        printfn "WARNING filter -d skipped ALL dlls for validation!"
        printfn ""
        Console.ResetColor()
+            
+
+let runValidation (parsed:ParseResults<Arguments>) =
+    let nuGetPackagePath = parsed.GetResult NuGetPackagePath |> Path.GetFullPath
+    if not(File.Exists nuGetPackagePath) then failwithf "Package does not exist %s" nuGetPackagePath
     
+    let assemblyName = System.IO.Path.GetFileNameWithoutExtension nuGetPackagePath
     
-    
+    let tmp = Path.GetTempPath ()
+    let tmpFolder = Directory.CreateDirectory(Path.Combine (tmp, assemblyName))
+    printfn "Temp output folder: %s" tmpFolder.FullName
+    try
+        Zip.unzip tmpFolder.FullName nuGetPackagePath
+        runSteps parsed tmpFolder assemblyName
+    finally
+        tmpFolder.Delete(true)
 
 [<EntryPoint>]
 let main argv =
