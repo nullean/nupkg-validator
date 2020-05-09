@@ -35,7 +35,7 @@ jobs:
       name: pristine check
     - run: ./build.sh build -s true
     - run: ./build.sh release -s true
-    - run: dotnet nuget push build/output/*.nupkg -k ${{secrets.GITHUB_TOKEN}}
+    - run: dotnet nuget push build/output/*.nupkg -k ${{secrets.GITHUB_TOKEN}} --skip-duplicate --no-symbols true
       if: github.event_name == 'push' && startswith(github.ref, 'refs/heads')
-    - run: dotnet nuget push build/output/*.nupkg -k ${{secrets.NUGET_ORG_API_KEY}} -s https://api.nuget.org/v3/index.json
+    - run: dotnet nuget push build/output/*.nupkg -k ${{secrets.NUGET_ORG_API_KEY}} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols true
       if: github.event_name == 'push' && startswith(github.ref, 'refs/tags')
