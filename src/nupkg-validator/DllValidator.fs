@@ -1,7 +1,6 @@
 module DllValidator
 
 open System
-open System
 open Fake.Core
 open System.Diagnostics
 open System.IO

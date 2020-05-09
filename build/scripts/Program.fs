@@ -1,6 +1,5 @@
 ﻿module Program
 
-open System
 open Argu
 open Bullseye
 open ProcNet
