@@ -46,9 +46,9 @@ let private release (arguments:ParseResults<Arguments>) =
         Paths.RootRelative p.FullName
     let project = Paths.RootRelative Paths.ToolProject.FullName
     let validate =
-        let dotnetRun =[ "run"; "-c"; "Release"; "-f"; "netcoreapp3.1"; "-p"; project]  
-        exec "dotnet" (dotnetRun @ ["--"; nugetPackage; "-v"; currentVersion; "-a"; Paths.ToolName])
-    
+        let dotnetRun =[ "run"; "-c"; "Release"; "-f"; "netcoreapp3.1"; "-p"; project]
+        let validationArgs = ["-v"; currentVersion; "-a"; Paths.ToolName; "-k"; "96c599bbe3e70f5d"]
+        exec "dotnet" (dotnetRun @ ["--"; nugetPackage;] @ validationArgs)
     
     printfn "release"
     
