@@ -26,6 +26,7 @@ let Scan (dlls:FileInfo list) (tmpFolder:DirectoryInfo) version fixedVersion pub
         let dllVersion = FileVersionInfo.GetVersionInfo(dll.FullName)
         printfn "" 
         printfn "[dll] %s" relativePath
+        printfn "[dll] %s" namedAssembly.FullName
         printfn "[version] Assembly: %A" assemblyVersion
         printfn "[version] AssemblyFile: %s"  dllVersion.FileVersion 
         printfn "[version] Informational: %s" dllVersion.ProductVersion

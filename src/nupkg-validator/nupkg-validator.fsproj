@@ -7,6 +7,9 @@
     <RootNamespace>NupkgValidations</RootNamespace>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>nupkg-validator</ToolCommandName>
+    
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\build\keys\keypair.snk</AssemblyOriginatorKeyFile>
 
     <PackageIcon>nuget-icon.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
