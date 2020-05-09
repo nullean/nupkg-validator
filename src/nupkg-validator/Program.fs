@@ -9,27 +9,27 @@ open Fake.IO
 
 type Arguments =
     | [<First; MainCommand; Mandatory; CliPrefix(CliPrefix.None)>] NuGetPackagePath of string
-    | [<AltCommandLine("-v")>]ExpectedVersion of string 
-    | [<AltCommandLine("-f")>]FixedVersion of bool
     | [<AltCommandLine("-a")>]AssemblyNameToLookFor of string
     | [<AltCommandLine("-d")>]DllsToSkip of string
-    | [<AltCommandLine("-k")>]PublicKey of string
     
     // validations
+    | [<AltCommandLine("-v")>]ExpectedVersion of string 
+    | [<AltCommandLine("-n")>]NotMajorOnly of bool
+    | [<AltCommandLine("-k")>]PublicKey of string
     | NoDependencies of bool
     with
     interface IArgParserTemplate with
         member s.Usage =
             match s with
             | NuGetPackagePath _ -> "Specify the path to the nuget package"
-            | ExpectedVersion _ -> "The version we expect to be set for all dlls in the nuget package"
-            | FixedVersion _ -> "Make sure AssemblyVersion in dll is rounded down to the nearest major, defaults to true"
-            | PublicKey _ -> "The public key we expect the dlls to be signed with"
             
-            | AssemblyNameToLookFor _ -> "The name of the assembly to look for in the nupkg, defaults to all"
-            | DllsToSkip _ -> "Comma separated list of strings of dlls file names to skip, defaults to none"
-            
+            | ExpectedVersion _ -> "Assert that this version number was set properly on the dlls"
+            | NotMajorOnly _ -> "Assert AssemblyVersion is the --expectedversion, by default we assert its MAJOR.0.0.0"
+            | PublicKey _ -> "Assert this public key token makes it way on the AssemblyName for the dlls"
             | NoDependencies _ -> "Assert the package has NO dependencies"
+            
+            | AssemblyNameToLookFor _ -> "Filter for dll(s) with this AssemblyName"
+            | DllsToSkip _ -> "Filter, comma separated list of strings of dlls file names to skip, defaults to none"
             
 
 let runValidation (parsed:ParseResults<Arguments>) =
@@ -73,7 +73,7 @@ let runValidation (parsed:ParseResults<Arguments>) =
         parsed.Split(",", StringSplitOptions.RemoveEmptyEntries) |> Seq.toList
     
     let version = parsed.TryGetResult ExpectedVersion 
-    let fixedVersion = parsed.TryGetResult FixedVersion |> Option.defaultValue true 
+    let fixedVersion = parsed.TryGetResult NotMajorOnly |> Option.defaultValue true 
     let publicKey = parsed.TryGetResult PublicKey
     
     DllValidator.Scan dlls tmpFolder version fixedVersion publicKey skipDlls

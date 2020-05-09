@@ -19,20 +19,24 @@ let private isReleaseMode (dll:FileInfo) =
 
 let private runValidation (dll:FileInfo) relativePath expectedVersion fixedVersion publicKey = 
     let namedAssembly = AssemblyName.GetAssemblyName(dll.FullName)
-    let a = namedAssembly.Version
-    // validate that AssemblyVersion only sets major version component
-    if (fixedVersion && (a.Minor > 0 || a.Revision > 0 || a.Build > 0)) then
-        failwith (sprintf "[version] %s AssemblyVersion is not fixed to %i.0.0.0" relativePath a.Major)
-    
-    
     let dllVersion = FileVersionInfo.GetVersionInfo(dll.FullName)
     match expectedVersion with
     | None -> ignore()
     | Some expectedVersion ->
-        // validate that AssemblyFileVersion is the expected version without prerelease info
+        
+        let a = namedAssembly.Version
+        let nonFixedVersion = sprintf "%i.%i.%i.0" a.Major a.Minor a.Build
         let expectedFileVersion = 
             let v = SemVer.parse expectedVersion
             sprintf "%i.%i.%i.0" v.Major v.Minor v.Patch
+            
+        // validate that AssemblyVersion 
+        if (fixedVersion && (a.Minor > 0 || a.Revision > 0 || a.Build > 0)) then
+            failwith (sprintf "[version] %s AssemblyVersion is not fixed to %i.0.0.0" relativePath a.Major)
+        elif not fixedVersion && (nonFixedVersion <> expectedVersion) then
+            failwith (sprintf "[version] %s AssemblyVersion expected %s actual %s" relativePath expectedVersion nonFixedVersion)
+
+        // validate that AssemblyFileVersion is the expected version without prerelease info
         if (dllVersion.FileVersion <> expectedFileVersion) then
             failwith (sprintf "[version] %s AssemblyFileVersion expected %s, actual: %s" relativePath expectedFileVersion dllVersion.FileVersion)
          
