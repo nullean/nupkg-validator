@@ -1,39 +1,38 @@
 module CommandLine
 
 open Argu
+open Microsoft.FSharp.Reflection
 
-type BumpArguments =
-    | [<First; CliPrefix(CliPrefix.None)>] Version of string
-    with
-    interface IArgParserTemplate with
-        member s.Usage =
-            match s with
-            | Version _ -> "Optionally set the new version to bump to, otherwise increments the patch version"
-    static member Name = "bump"
-and Arguments =
-    | [<CliPrefix(CliPrefix.None);SubCommand>] Bump of ParseResults<BumpArguments>
-    | [<CliPrefix(CliPrefix.None);SubCommand>] PristineCheck 
+type Arguments =
+    | [<CliPrefix(CliPrefix.None);SubCommand>] Clean
     | [<CliPrefix(CliPrefix.None);SubCommand>] Build 
+    | [<CliPrefix(CliPrefix.None);Hidden;SubCommand>] PristineCheck 
+    | [<CliPrefix(CliPrefix.None);Hidden;SubCommand>] GeneratePackages
+    | [<CliPrefix(CliPrefix.None);Hidden;SubCommand>] ValidatePackages 
+    | [<CliPrefix(CliPrefix.None);Hidden;SubCommand>] GenerateReleaseNotes 
     | [<CliPrefix(CliPrefix.None);SubCommand>] Release 
+    | [<CliPrefix(CliPrefix.None);Hidden;SubCommand>] CreateReleaseOnGithub 
     | [<CliPrefix(CliPrefix.None);SubCommand>] Publish
     
     | [<Inherit;AltCommandLine("-s")>] SingleTarget of bool
+    | [<Inherit>] Token of string 
 with
     interface IArgParserTemplate with
         member this.Usage =
             match this with
-            | Bump _ -> "bump the version, create a bump commit and push"
+            | Clean _ -> "clean known output locations"
             | Build _ -> "Run build and tests"
-            | PristineCheck _ -> "validates the repository is in a clean state"
             | Release _ -> "runs build, and create an validates the packages shy of publishing them"
-            | Publish _ -> "Runs the release command, tags the current commit and pushes the tag"
+            | Publish _ -> "Runs the full release"
             
             | SingleTarget _ -> "Runs the provided sub command without running their dependencies"
+            | Token _ -> "Token to be used to authenticate with github"
+            | PristineCheck  
+            | GeneratePackages
+            | ValidatePackages 
+            | GenerateReleaseNotes
+            | CreateReleaseOnGithub 
+                -> "Undocumented, dependent target"
     member this.Name =
-        match this with 
-        | Bump _ -> "bump"
-        | PristineCheck -> "pristinecheck"
-        | Build -> "build"
-        | Release -> "release"
-        | Publish -> "publish"
-        | x -> failwithf "Not a subcommand %A" x
+        match FSharpValue.GetUnionFields(this, typeof<Arguments>) with
+        | case, _ -> case.Name.ToLowerInvariant()
