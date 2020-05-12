@@ -4,6 +4,7 @@ open System
 open System.IO
 
 let ToolName = "nupkg-validator"
+let Repository = sprintf "nullean/%s" ToolName
 
 let Root =
     let mutable dir = DirectoryInfo(".")
