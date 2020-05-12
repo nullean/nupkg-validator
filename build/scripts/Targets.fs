@@ -83,7 +83,7 @@ let private createReleaseOnGithub (arguments:ParseResults<Arguments>) =
         @ labelMapping
         @ tokenArgs
         
-    exec "dotnet" (["release-notes"] @ ["--"; ] @ releaseArgs) |> ignore
+    exec "dotnet" (["release-notes"] @ releaseArgs) |> ignore
     
 let private release (arguments:ParseResults<Arguments>) = printfn "release"
 
