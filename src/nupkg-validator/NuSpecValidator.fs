@@ -40,7 +40,7 @@ type NuSpec(specFile: FileInfo) =
         spec.Document.Root.XPathSelectElements("//x:metadata/x:dependencies/x:group", ns)
         |> Seq.collect (fun e ->
             let tfm = e.Attribute(XName.Get("targetFramework"))
-            let dependencies = e.XPathSelectElements("//x:dependency", ns)
+            let dependencies = e.XPathSelectElements(".//x:dependency", ns)
             dependencies
             |> Seq.map (fun d ->
                 let id = d.Attribute(XName.Get("id"))
