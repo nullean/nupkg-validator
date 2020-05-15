@@ -52,7 +52,7 @@ let private runSteps (parsed:ParseResults<Arguments>) (tmpFolder:DirectoryInfo) 
             | None -> "*.dll"
         let dlls = tmpFolder.GetFiles(searchFor, SearchOption.AllDirectories) |> Seq.toList
         match dlls  with
-        | [] -> failwithf "No dlls found in %s" tmpFolder.FullName
+        | [] -> failwithf "No dlls found in %s, looking for %s" tmpFolder.FullName searchFor
         | head -> head
       
         
