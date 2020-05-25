@@ -15,12 +15,14 @@ type Arguments =
     | [<AltCommandLine("-v")>]ExpectedVersion of string 
     | [<AltCommandLine("-n")>]NotMajorOnly of bool
     | [<AltCommandLine("-k")>]PublicKey of string
+    | [<AltCommandLine("-t")>]TempFolder of string
     | NoDependencies of bool
     with
     interface IArgParserTemplate with
         member s.Usage =
             match s with
             | NuGetPackagePath _ -> "Specify the path to the nuget package"
+            | TempFolder _ -> "The temp folder location in which to extract the package contents"
             
             | ExpectedVersion _ -> "Assert that this version number was set properly on the dlls"
             | NotMajorOnly _ -> "Assert AssemblyVersion is the --expectedversion, by default we assert its MAJOR.0.0.0"
@@ -81,7 +83,7 @@ let runValidation (parsed:ParseResults<Arguments>) =
     
     let assemblyName = System.IO.Path.GetFileNameWithoutExtension nuGetPackagePath
     
-    let tmp = Path.GetTempPath ()
+    let tmp = parsed.TryGetResult TempFolder |> Option.defaultValue (Path.GetTempPath())
     let tmpFolder = Directory.CreateDirectory(Path.Combine (tmp, assemblyName))
     printfn "Temp output folder: %s" tmpFolder.FullName
     try
