@@ -16,6 +16,7 @@ type Arguments =
     | [<AltCommandLine("-n")>]NotMajorOnly of bool
     | [<AltCommandLine("-k")>]PublicKey of string
     | [<AltCommandLine("-t")>]TempFolder of string
+    | [<AltCommandLine("-r")>]SkipReleaseMode of bool
     | NoDependencies of bool
     with
     interface IArgParserTemplate with
@@ -28,6 +29,7 @@ type Arguments =
             | NotMajorOnly _ -> "Assert AssemblyVersion is the --expectedversion, by default we assert its MAJOR.0.0.0"
             | PublicKey _ -> "Assert this public key token makes it way on the AssemblyName for the dlls"
             | NoDependencies _ -> "Assert the package has NO dependencies"
+            | SkipReleaseMode _ -> "Skip validation that the dlls are built in release mode"
             
             | AssemblyNameToLookFor _ -> "Filter for dll(s) with this AssemblyName"
             | DllsToSkip _ -> "Filter, comma separated list of strings of dlls file names to skip, defaults to none"
@@ -65,8 +67,9 @@ let private runSteps (parsed:ParseResults<Arguments>) (tmpFolder:DirectoryInfo) 
     let version = parsed.TryGetResult ExpectedVersion 
     let fixedVersion = parsed.TryGetResult NotMajorOnly |> Option.defaultValue true 
     let publicKey = parsed.TryGetResult PublicKey
+    let skipReleaseMode = parsed.TryGetResult SkipReleaseMode |> Option.defaultValue false 
     
-    DllValidator.Scan dlls tmpFolder version fixedVersion publicKey skipDlls
+    DllValidator.Scan dlls tmpFolder version fixedVersion publicKey skipDlls skipReleaseMode
     
     let filteredAll = skipDlls.Length > 0 && dlls |> List.filter (fun dll -> not (DllValidator.DllFilter skipDlls dll)) |> List.length = 0
     if filteredAll then

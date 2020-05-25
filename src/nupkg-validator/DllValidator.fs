@@ -16,7 +16,7 @@ let private isReleaseMode (dll:FileInfo) =
         let debuggableAttribute = attribs.[0] :?> DebuggableAttribute
         not debuggableAttribute.IsJITOptimizerDisabled
 
-let private runValidation (dll:FileInfo) relativePath expectedVersion fixedVersion publicKey = 
+let private runValidation (dll:FileInfo) relativePath expectedVersion fixedVersion publicKey skipReleaseMode = 
     let namedAssembly = AssemblyName.GetAssemblyName(dll.FullName)
     let dllVersion = FileVersionInfo.GetVersionInfo(dll.FullName)
     match expectedVersion with
@@ -47,16 +47,18 @@ let private runValidation (dll:FileInfo) relativePath expectedVersion fixedVersi
     | None -> ignore()
     | Some p ->
         let token = sprintf "PublicKeyToken=%s" p
-        if not <| namedAssembly.FullName.Contains(token) then
-            failwith <| sprintf "[version] %s is not publicly signed with expected token: %s" dll.Name p
-            
-    match isReleaseMode dll with
+        match namedAssembly.FullName.Contains(token) with
+        | false -> failwith <| sprintf "[version] %s is NOT publicly signed with expected token: %s" dll.Name p
+        | true -> printf "[version] %s properly signed with token: %s" dll.Name p
+    
+    let releaseCheck = if skipReleaseMode then true else isReleaseMode dll         
+    match releaseCheck with
     | true -> ignore()
     | false -> failwith <| sprintf "[version] %s is not build in Release mode. IsJitOptimizerDisabled returned true on assembly" relativePath
 
 let DllFilter skipDlls (dll:FileInfo) = skipDlls |> List.exists (fun skip -> skip = dll.Name || skip = Path.GetFileNameWithoutExtension(dll.Name))
 
-let Scan (dlls:FileInfo list) (tmpFolder:DirectoryInfo) expectedVersion fixedVersion publicKey skipDlls =
+let Scan (dlls:FileInfo list) (tmpFolder:DirectoryInfo) expectedVersion fixedVersion publicKey skipDlls skipReleaseMode =
     dlls
     |> List.iter (fun dll ->
         let relativePath = Path.GetRelativePath(tmpFolder.FullName, dll.FullName);
@@ -77,6 +79,6 @@ let Scan (dlls:FileInfo list) (tmpFolder:DirectoryInfo) expectedVersion fixedVer
             Console.ForegroundColor <- ConsoleColor.Blue
             printfn "[dll] skipping validation because dll matches -d filter"
             Console.ResetColor()
-        | false -> runValidation dll relativePath expectedVersion fixedVersion publicKey
+        | false -> runValidation dll relativePath expectedVersion fixedVersion publicKey skipReleaseMode
     )
     
