@@ -17,7 +17,7 @@ let private restoreTools = lazy(exec "dotnet" ["tool"; "restore"])
 let private currentVersion =
     lazy(
         restoreTools.Value |> ignore
-        let r = Proc.Start("dotnet", "minver", "-d", "canary")
+        let r = Proc.Start("dotnet", "minver", "--default-pre-release-phase", "canary")
         let o = r.ConsoleOut |> Seq.find (fun l -> not(l.Line.StartsWith("MinVer:")))
         o.Line
     )
@@ -42,7 +42,7 @@ let private validatePackages (arguments:ParseResults<Arguments>) =
         let p = Paths.Output.GetFiles("*.nupkg") |> Seq.sortByDescending(fun f -> f.CreationTimeUtc) |> Seq.head
         Paths.RootRelative p.FullName
     let project = Paths.RootRelative Paths.ToolProject.FullName
-    let dotnetRun =[ "run"; "-c"; "Release"; "-f"; "net5.0"; "-p"; project]
+    let dotnetRun =[ "run"; "-c"; "Release"; "-f"; "net6.0"; "--project"; project]
     let validationArgs = ["-v"; currentVersion.Value; "-a"; Paths.ToolName; "-k"; "96c599bbe3e70f5d"]
     exec "dotnet" (dotnetRun @ ["--"; nugetPackage;] @ validationArgs) |> ignore
 
