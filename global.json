@@ -1,8 +1,5 @@
 {
   "sdk": {
-    "version": "5.0.100"
-  },
-  "version": "8.0.0-alpha1",
-  "doc_current": "master",
-  "doc_branch": "master"
+    "version": "6.0.100"
+  }
 }
