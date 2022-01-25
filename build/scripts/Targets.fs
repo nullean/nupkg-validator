@@ -42,7 +42,7 @@ let private validatePackages (arguments:ParseResults<Arguments>) =
         let p = Paths.Output.GetFiles("*.nupkg") |> Seq.sortByDescending(fun f -> f.CreationTimeUtc) |> Seq.head
         Paths.RootRelative p.FullName
     let project = Paths.RootRelative Paths.ToolProject.FullName
-    let dotnetRun =[ "run"; "-c"; "Release"; "-f"; "net5.0"; "-p"; project]
+    let dotnetRun =[ "run"; "-c"; "Release"; "-f"; "net6.0"; "-p"; project]
     let validationArgs = ["-v"; currentVersion.Value; "-a"; Paths.ToolName; "-k"; "96c599bbe3e70f5d"]
     exec "dotnet" (dotnetRun @ ["--"; nugetPackage;] @ validationArgs) |> ignore
 
