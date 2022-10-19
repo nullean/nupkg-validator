@@ -54,12 +54,8 @@ let private runSteps (parsed:ParseResults<Arguments>) (tmpFolder:DirectoryInfo) 
             match parsed.TryGetResult AssemblyNameToLookFor with
             | Some s -> sprintf "%s.dll" s
             | None -> "*.dll"
-        let dlls = tmpFolder.GetFiles(searchFor, SearchOption.AllDirectories) |> Seq.toList
-        match dlls  with
-        | [] -> failwithf "No dlls found in %s, looking for %s" tmpFolder.FullName searchFor
-        | head -> head
-      
-        
+        tmpFolder.GetFiles(searchFor, SearchOption.AllDirectories) |> Seq.toList
+
     let skipDlls =
         let parsed = parsed.TryGetResult DllsToSkip |> Option.defaultValue ""
         parsed.Split(",", StringSplitOptions.RemoveEmptyEntries) |> Seq.toList
