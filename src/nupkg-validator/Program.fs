@@ -32,7 +32,7 @@ type Arguments =
             | NoDependencies _ -> "Assert the package has NO dependencies"
             | SkipReleaseMode _ -> "Skip validation that the dlls are built in release mode"
             
-            | NoFailOnMissingDlls _ -> ""
+            | NoFailOnMissingDlls _ -> "Don't fail when no dlls are found"
 
             | AssemblyNameToLookFor _ -> "Filter for dll(s) with this AssemblyName"
             | DllsToSkip _ -> "Filter, comma separated list of strings of dlls file names to skip, defaults to none"
