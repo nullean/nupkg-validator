@@ -17,6 +17,7 @@ type Arguments =
     | [<AltCommandLine("-k")>]PublicKey of string
     | [<AltCommandLine("-t")>]TempFolder of string
     | [<AltCommandLine("-r")>]SkipReleaseMode of bool
+    | NoFailOnMissingDlls of bool
     | NoDependencies of bool
     with
     interface IArgParserTemplate with
@@ -31,6 +32,8 @@ type Arguments =
             | NoDependencies _ -> "Assert the package has NO dependencies"
             | SkipReleaseMode _ -> "Skip validation that the dlls are built in release mode"
             
+            | NoFailOnMissingDlls _ -> ""
+
             | AssemblyNameToLookFor _ -> "Filter for dll(s) with this AssemblyName"
             | DllsToSkip _ -> "Filter, comma separated list of strings of dlls file names to skip, defaults to none"
 
@@ -54,7 +57,13 @@ let private runSteps (parsed:ParseResults<Arguments>) (tmpFolder:DirectoryInfo) 
             match parsed.TryGetResult AssemblyNameToLookFor with
             | Some s -> sprintf "%s.dll" s
             | None -> "*.dll"
-        tmpFolder.GetFiles(searchFor, SearchOption.AllDirectories) |> Seq.toList
+        
+        let dlls = tmpFolder.GetFiles(searchFor, SearchOption.AllDirectories) |> Seq.toList
+        match NoFailOnMissingDlls with
+        | true -> dlls
+        | false -> match dlls  with
+            | [] -> failwithf "No dlls found in %s, looking for %s" tmpFolder.FullName searchFor
+            | head -> head
 
     let skipDlls =
         let parsed = parsed.TryGetResult DllsToSkip |> Option.defaultValue ""
