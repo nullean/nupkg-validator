@@ -19,17 +19,20 @@ let exec binary args =
 let private restoreTools = lazy (exec "dotnet" [ "tool"; "restore" ])
 
 let private currentVersion =
-    lazy
-        (restoreTools.Value |> ignore
+    lazy (
+         restoreTools.Value |> ignore
          let r = Proc.Start("dotnet", "minver", "-p", "canary.0")
          let o = r.ConsoleOut |> Seq.find (fun l -> not (l.Line.StartsWith("MinVer:")))
-         o.Line)
+         o.Line
+    )
 
 let private currentVersionInformational =
-    lazy (sprintf "%s+%s" currentVersion.Value (Information.getCurrentSHA1 (".")))
+    lazy (
+        sprintf "%s+%s" currentVersion.Value (Information.getCurrentSHA1 ".")
+    )
 
 let private clean (arguments: ParseResults<Arguments>) =
-    if (Paths.Output.Exists) then
+    if Paths.Output.Exists then
         Paths.Output.Delete(true)
 
     exec "dotnet" [ "clean" ] |> ignore
@@ -150,15 +153,15 @@ let private publish (arguments: ParseResults<Arguments>) = printfn "publish"
 
 let Setup (parsed: ParseResults<Arguments>) (subCommand: Arguments) =
     let step (name: string) action =
-        Targets.Target(name, new Action(fun _ -> action (parsed)))
+        Targets.Target(name, new Action(fun _ -> action parsed))
 
     let cmd (name: string) commandsBefore steps action =
         let singleTarget = (parsed.TryGetResult SingleTarget |> Option.defaultValue false)
 
         let deps =
             match (singleTarget, commandsBefore) with
-            | (true, _) -> []
-            | (_, Some d) -> d
+            | true, _ -> []
+            | _, Some d -> d
             | _ -> []
 
         let steps = steps |> Option.defaultValue []
