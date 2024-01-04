@@ -68,7 +68,7 @@ let private validatePackages (arguments: ParseResults<Arguments>) =
           Paths.ToolName
           "-k"
           "96c599bbe3e70f5d" ]
-    printfn "dotnet %O" (dotnetRun @ [ "--"; nugetPackage ] @ validationArgs)
+    printfn "dotnet %A" (dotnetRun @ [ "--"; nugetPackage ] @ validationArgs)
     exec "dotnet" (dotnetRun @ [ "--"; nugetPackage ] @ validationArgs) |> ignore
 
 let private generateApiChanges (arguments: ParseResults<Arguments>) =
