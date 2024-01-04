@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
     <AssemblyName>nupkg-validator</AssemblyName>
     <RootNamespace>NupkgValidations</RootNamespace>
     <PackAsTool>true</PackAsTool>
@@ -26,6 +26,7 @@
     <PackageReference Include="Argu" Version="6.0.0"/>
     <PackageReference Include="Fake.IO.Zip" Version="5.15.0"/>
     <PackageReference Include="Fake.Core.SemVer" Version="5.15.0"/>
+    <PackageReference Update="MinVer" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\nuget-icon.png" CopyToOutputDirectory="PreserveNewest">
