@@ -29,10 +29,10 @@ type Arguments =
             | ExpectedVersion _ -> "Assert that this version number was set properly on the dlls"
             | NotMajorOnly _ -> "Assert AssemblyVersion is the --expectedversion, by default we assert its MAJOR.0.0.0"
             | PublicKey _ -> "Assert this public key token makes it way on the AssemblyName for the dlls"
-            | NoDependencies _ -> "Assert the package has NO dependencies"
             | SkipReleaseMode _ -> "Skip validation that the dlls are built in release mode"
             
-            | NoFailOnMissingDlls _ -> "Don't fail when no dlls are found"
+            | NoDependencies _ -> "Assert the package has NO dependencies, defaults to false"
+            | NoFailOnMissingDlls _ -> "Don't fail when no dlls are found, defaults to false"
 
             | AssemblyNameToLookFor _ -> "Filter for dll(s) with this AssemblyName"
             | DllsToSkip _ -> "Filter, comma separated list of strings of dlls file names to skip, defaults to none"
@@ -51,7 +51,7 @@ let private runSteps (parsed:ParseResults<Arguments>) (tmpFolder:DirectoryInfo) 
         | 0 -> ()
         | n -> failwithf $"Package: %s{assemblyName}, has %i{n} dependencies where none were expected" 
         
-    let validateNoDlls = parsed.TryGetResult NoFailOnMissingDlls |> Option.defaultValue false
+    let validateNoDlls = parsed.TryGetResult NoFailOnMissingDlls |> Option.defaultValue true
     let dlls =
         let searchFor =
             match parsed.TryGetResult AssemblyNameToLookFor with
