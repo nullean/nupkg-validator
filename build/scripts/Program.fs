@@ -29,4 +29,3 @@ let main argv =
         Targets.RunTargetsAndExit
             ([target], (fun e -> swallowTypes |> List.contains (e.GetType()) ), ":")
         0
-        

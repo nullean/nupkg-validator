@@ -37,8 +37,7 @@ let private pristineCheck (arguments:ParseResults<Arguments>) =
     match Information.isCleanWorkingCopy "." with
     | true  -> printfn "The checkout folder does not have pending changes, proceeding"
     | _ ->
-        //failwithf "The checkout folder has pending changes, aborting"
-        ignore()
+        failwithf "The checkout folder has pending changes, aborting"
 
 let private generatePackages (arguments:ParseResults<Arguments>) =
     let output = Paths.RootRelative Paths.Output.FullName
