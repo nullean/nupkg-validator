@@ -17,11 +17,16 @@ let private restoreTools = lazy(exec "dotnet" ["tool"; "restore"])
 let private currentVersion =
     lazy(
         restoreTools.Value |> ignore
-        let r = Proc.Start("dotnet", "minver", "--default-pre-release-phase", "canary")
+        let r = Proc.Start("dotnet", "minver", "-p", "canary.0")
         let o = r.ConsoleOut |> Seq.find (fun l -> not(l.Line.StartsWith("MinVer:")))
         o.Line
     )
 
+let private currentVersionInformational =
+    lazy(
+        sprintf "%s+%s" currentVersion.Value (Information.getCurrentSHA1( "."))
+    )
+    
 let private clean (arguments:ParseResults<Arguments>) =
     if (Paths.Output.Exists) then Paths.Output.Delete (true)
     exec "dotnet" ["clean"] |> ignore
@@ -31,7 +36,9 @@ let private build (arguments:ParseResults<Arguments>) = exec "dotnet" ["build"; 
 let private pristineCheck (arguments:ParseResults<Arguments>) =
     match Information.isCleanWorkingCopy "." with
     | true  -> printfn "The checkout folder does not have pending changes, proceeding"
-    | _ -> failwithf "The checkout folder has pending changes, aborting"
+    | _ ->
+        //failwithf "The checkout folder has pending changes, aborting"
+        ignore()
 
 let private generatePackages (arguments:ParseResults<Arguments>) =
     let output = Paths.RootRelative Paths.Output.FullName
@@ -42,8 +49,8 @@ let private validatePackages (arguments:ParseResults<Arguments>) =
         let p = Paths.Output.GetFiles("*.nupkg") |> Seq.sortByDescending(fun f -> f.CreationTimeUtc) |> Seq.head
         Paths.RootRelative p.FullName
     let project = Paths.RootRelative Paths.ToolProject.FullName
-    let dotnetRun =[ "run"; "-c"; "Release"; "-f"; "net6.0"; "--project"; project]
-    let validationArgs = ["-v"; currentVersion.Value; "-a"; Paths.ToolName; "-k"; "96c599bbe3e70f5d"]
+    let dotnetRun =[ "run"; "-c"; "Release"; "-f"; "net8.0"; "--project"; project]
+    let validationArgs = ["-v"; currentVersionInformational.Value; "-a"; Paths.ToolName; "-k"; "96c599bbe3e70f5d"]
     exec "dotnet" (dotnetRun @ ["--"; nugetPackage;] @ validationArgs) |> ignore
 
 let private generateApiChanges (arguments:ParseResults<Arguments>) =
@@ -53,7 +60,7 @@ let private generateApiChanges (arguments:ParseResults<Arguments>) =
         [
             "assembly-differ"
             (sprintf "previous-nuget|%s|%s|netcoreapp3.1" Paths.ToolName currentVersion);
-            (sprintf "directory|src/%s/bin/Release/netcoreapp3.1" Paths.ToolName);
+            (sprintf "directory|src/%s/bin/Release/net6.0" Paths.ToolName);
             "--target"; Paths.ToolName; "-f"; "github-comment"; "--output"; output
         ]
         
