@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net8.0;net9.0</TargetFrameworks>
     <AssemblyName>nupkg-validator</AssemblyName>
     <RootNamespace>NupkgValidations</RootNamespace>
     <PackAsTool>true</PackAsTool>
@@ -23,9 +23,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Argu" Version="6.0.0"/>
-    <PackageReference Include="Fake.IO.Zip" Version="5.15.0"/>
-    <PackageReference Include="Fake.Core.SemVer" Version="5.15.0"/>
+    <PackageReference Include="Argu" Version="6.2.5" />
+    <PackageReference Include="Fake.IO.Zip" Version="5.15.0" />
+    <PackageReference Include="Fake.Core.SemVer" Version="5.15.0" />
     <PackageReference Update="MinVer" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
@@ -37,9 +37,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="NuSpecValidator.fs"/>
-    <Compile Include="DllValidator.fs"/>
-    <Compile Include="Program.fs"/>
+    <Compile Include="NuSpecValidator.fs" />
+    <Compile Include="DllValidator.fs" />
+    <Compile Include="Program.fs" />
   </ItemGroup>
   
 </Project>

@@ -52,14 +52,14 @@ let private generatePackages (arguments: ParseResults<Arguments>) =
 let private validatePackages (arguments: ParseResults<Arguments>) =
     let nugetPackage =
         let p =
-            Paths.Output.GetFiles("*.nupkg")
+            Paths.Output.GetFiles "*.nupkg"
             |> Seq.sortByDescending (fun f -> f.CreationTimeUtc)
             |> Seq.head
 
         Paths.RootRelative p.FullName
 
     let project = Paths.RootRelative Paths.ToolProject.FullName
-    let dotnetRun = [ "run"; "-c"; "Release"; "-f"; "net8.0"; "--project"; project ]
+    let dotnetRun = [ "run"; "-c"; "Release"; "-f"; "net9.0"; "--project"; project ]
 
     let validationArgs =
         [ "-v"
@@ -77,8 +77,8 @@ let private generateApiChanges (arguments: ParseResults<Arguments>) =
 
     let args =
         [ "assembly-differ"
-          (sprintf "previous-nuget|%s|%s|netcoreapp3.1" Paths.ToolName currentVersion)
-          (sprintf "directory|src/%s/bin/Release/net6.0" Paths.ToolName)
+          sprintf "previous-nuget|%s|%s|net8.0" Paths.ToolName currentVersion
+          sprintf "directory|src/%s/bin/Release/net9.0" Paths.ToolName
           "--target"
           Paths.ToolName
           "-f"
