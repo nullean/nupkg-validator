@@ -47,7 +47,7 @@ jobs:
       if: github.event_name == 'push' && startswith(github.ref, 'refs/heads')
       shell: bash
       run:  |
-        dotnet nuget add source --username USERNAME --password ${{secrets.GITHUB_TOKEN}} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/elastic/index.json"
+        dotnet nuget add source --username USERNAME --password ${{secrets.GITHUB_TOKEN}} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/nullean/index.json"
         until dotnet nuget push 'build/output/*.nupkg' -k ${{secrets.GITHUB_TOKEN}} --skip-duplicate --no-symbols --source "github"; do echo "Retrying"; sleep 1; done;
 
     - run: ./build.sh generatereleasenotes -s true
