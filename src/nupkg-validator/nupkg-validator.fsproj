@@ -26,7 +26,6 @@
     <PackageReference Include="Argu" Version="6.2.5" />
     <PackageReference Include="Fake.IO.Zip" Version="5.15.0" />
     <PackageReference Include="Fake.Core.SemVer" Version="5.15.0" />
-    <PackageReference Update="MinVer" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\nuget-icon.png" CopyToOutputDirectory="PreserveNewest">
