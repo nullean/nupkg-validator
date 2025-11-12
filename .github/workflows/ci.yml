@@ -18,22 +18,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v5
       with:
         fetch-depth: 1
     - run: |
         git fetch --prune --unshallow --tags
         echo exit code $?
         git tag --list
-    - uses: actions/setup-dotnet@v1
+    - uses: actions/setup-dotnet@v5
       with:
         dotnet-version: |
           6.0.x
-<<<<<<< Updated upstream
-          9.0.x
-=======
           10.0.x
->>>>>>> Stashed changes
     
     - run: ./build.sh build -s true
       name: Build

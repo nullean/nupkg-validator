@@ -9,12 +9,7 @@ open Fake.Tools.Git
 open ProcNet
 
 let exec binary args =
-    let r =
-        Proc.Exec(binary, args |> List.map (fun a -> sprintf "\"%s\"" a) |> List.toArray)
-
-    match r.HasValue with
-    | true -> r.Value
-    | false -> failwithf "invocation of `%s` timed out" binary
+    Proc.Exec(binary, args |> List.toArray)
 
 let private restoreTools = lazy (exec "dotnet" [ "tool"; "restore" ])
 
@@ -59,7 +54,7 @@ let private validatePackages (arguments: ParseResults<Arguments>) =
         Paths.RootRelative p.FullName
 
     let project = Paths.RootRelative Paths.ToolProject.FullName
-    let dotnetRun = [ "run"; "-c"; "Release"; "-f"; "net9.0"; "--project"; project ]
+    let dotnetRun = [ "run"; "-c"; "Release"; "-f"; "net10.0"; "--project"; project ]
 
     let validationArgs =
         [ "-v"
