@@ -9,7 +9,7 @@ open Fake.Tools.Git
 open ProcNet
 
 let exec binary args =
-    Proc.Exec(binary, args |> List.map (fun a -> sprintf "\"%s\"" a) |> List.toArray)
+    Proc.Exec(binary, args |> List.toArray)
 
 let private restoreTools = lazy (exec "dotnet" [ "tool"; "restore" ])
 
