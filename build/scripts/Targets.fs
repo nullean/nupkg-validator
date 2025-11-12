@@ -54,7 +54,7 @@ let private validatePackages (arguments: ParseResults<Arguments>) =
         Paths.RootRelative p.FullName
 
     let project = Paths.RootRelative Paths.ToolProject.FullName
-    let dotnetRun = [ "run"; "-c"; "Release"; "-f"; "net9.0"; "--project"; project ]
+    let dotnetRun = [ "run"; "-c"; "Release"; "-f"; "net10.0"; "--project"; project ]
 
     let validationArgs =
         [ "-v"
