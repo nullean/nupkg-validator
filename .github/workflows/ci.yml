@@ -29,7 +29,11 @@ jobs:
       with:
         dotnet-version: |
           6.0.x
+<<<<<<< Updated upstream
           9.0.x
+=======
+          10.0.x
+>>>>>>> Stashed changes
     
     - run: ./build.sh build -s true
       name: Build
