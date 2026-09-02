@@ -10,6 +10,6 @@
     <Project Path="build/scripts/scripts.fsproj" />
   </Folder>
   <Folder Name="/src/">
-    <Project Path="src/nupkg-validator/nupkg-validator.fsproj" />
+    <Project Path="src/nupkg-validator/nupkg-validator.csproj" />
   </Folder>
 </Solution>
