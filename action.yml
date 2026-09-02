@@ -1,0 +1,20 @@
+name: 'nupkg-validator'
+description: 'Validate a NuGet package: dll build configuration, version, and strong-name signing'
+branding:
+  icon: 'check-circle'
+  color: 'blue'
+inputs:
+  path:
+    description: 'Path to the .nupkg file to validate'
+    required: true
+  args:
+    description: 'Extra arguments passed through to nupkg-validator verbatim, e.g. "-v 1.0.0 -a MyAssembly -k <token>"'
+    required: false
+    default: ''
+runs:
+  using: 'docker'
+  image: 'docker://ghcr.io/nullean/nupkg-validator:edge'
+  args:
+    - validate
+    - ${{ inputs.path }}
+    - ${{ inputs.args }}
