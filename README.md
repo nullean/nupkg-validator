@@ -35,11 +35,14 @@ dotnet nupkg-validator validate <path-to-package>
 
 You can omit `dotnet` if you install this as a global tool.
 
-> [!IMPORTANT]
-> Starting from `1.0.0`, the package path is passed to an explicit `validate` subcommand rather than
-> as a bare first argument (i.e. `nupkg-validator validate <path>` instead of `nupkg-validator <path>`).
-> This is a breaking change from earlier `0.x` releases, a side effect of moving off `Argu` (which no
-> longer worked once this tool was AOT-compiled, see below) onto [`Nullean.Argh`](https://github.com/nullean/curb).
+> [!NOTE]
+> Starting from `1.0.0`, the tool moved off `Argu` (which no longer worked once this tool was
+> AOT-compiled, see below) onto [`Nullean.Argh`](https://github.com/nullean/argh), which introduces an
+> explicit `validate` subcommand alongside the bare invocation. `validate` is optional as long as an
+> option comes before the package path (e.g. `nupkg-validator -v 1.2.3 <path>`); a package path as the
+> very first argument (`nupkg-validator <path>`) still needs the explicit subcommand
+> (`nupkg-validator validate <path>`), since the CLI parser resolves a bare leading argument as a
+> subcommand name first.
 
 ```bat
 Usage: nupkg-validator validate <path> [options]
