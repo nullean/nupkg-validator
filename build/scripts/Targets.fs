@@ -129,8 +129,17 @@ let private generateApiChanges (arguments: ParseResults<Arguments>) =
 
     let args =
         [ "assembly-differ"
-          sprintf "previous-nuget|%s|%s|net8.0" Paths.ToolName currentVersion
+          // The plain "nupkg-validator" package id is just a DotnetToolSettings.xml v2 shim pointing
+          // at per-RID sub-packages (see generatePackages above) - it ships no managed assembly of
+          // its own, so NuGetAssemblyProvider would find 0 assemblies there. The portable, signed
+          // managed build lives in "nupkg-validator.any" instead.
+          sprintf "previous-nuget|%s.any|%s|net8.0" Paths.ToolName currentVersion
           sprintf "directory|src/%s/bin/Release/net10.0" Paths.ToolName
+          // "nupkg-validator.any" doesn't exist on nuget.org yet - the 0.11.0 release that would have
+          // published it failed before reaching the nuget push. Don't fail this first-ever diff
+          // against it; once a version is published this is a no-op.
+          "-a"
+          "true"
           "--target"
           Paths.ToolName
           "-f"
