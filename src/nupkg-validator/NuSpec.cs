@@ -33,11 +33,14 @@ public sealed class NuSpec
 			.SelectMany(group =>
 			{
 				var tfm = group.Attribute("targetFramework")?.Value ?? "";
-				return group.Elements(Namespace + "dependency").Select(dep => new NuSpecDependency(
-					tfm,
-					dep.Attribute("id")?.Value ?? "",
-					dep.Attribute("version")?.Value ?? "",
-					dep.Attributes().Where(a => a.Name.LocalName is not ("id" or "version")).ToList()));
+				return group.Elements(Namespace + "dependency").Select(
+					dep => new NuSpecDependency(
+						tfm,
+						dep.Attribute("id")?.Value ?? "",
+						dep.Attribute("version")?.Value ?? "",
+						dep.Attributes().Where(a => a.Name.LocalName is not ("id" or "version")).ToList()
+					)
+				);
 			})
 			.GroupBy(d => d.TargetFramework)
 			.Select(g => (g.Key, (IReadOnlyList<NuSpecDependency>)g.ToList()))
@@ -62,7 +65,8 @@ public sealed class NuSpec
 		{
 			var nl = Environment.NewLine;
 			throw new InvalidOperationException(
-				$"Nuspec file yielded no metadata{nl}{nl}{spec.Document}{nl}{nl}This is most likely an xml namespace issue in this tool, please report an issue!{nl}");
+				$"Nuspec file yielded no metadata{nl}{nl}{spec.Document}{nl}{nl}This is most likely an xml namespace issue in this tool, please report an issue!{nl}"
+			);
 		}
 
 		foreach (var (tfm, deps) in spec.Dependencies)

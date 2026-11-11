@@ -27,13 +27,15 @@ public static class DllValidator
 	{
 		using var stream = File.OpenRead(dll.FullName);
 		using var peReader = new PEReader(stream);
-		if (!peReader.HasMetadata) return true;
+		if (!peReader.HasMetadata)
+			return true;
 
 		var reader = peReader.GetMetadataReader();
 		foreach (var handle in reader.GetAssemblyDefinition().GetCustomAttributes())
 		{
 			var attribute = reader.GetCustomAttribute(handle);
-			if (!IsDebuggableAttributeConstructor(reader, attribute.Constructor)) continue;
+			if (!IsDebuggableAttributeConstructor(reader, attribute.Constructor))
+				continue;
 
 			var blob = reader.GetBlobBytes(attribute.Value);
 			// Custom attribute blob layout (ECMA-335 §II.23.3): a 2-byte prolog, the fixed
@@ -53,14 +55,15 @@ public static class DllValidator
 
 	private static bool IsDebuggableAttributeConstructor(MetadataReader reader, EntityHandle ctorHandle)
 	{
-		if (ctorHandle.Kind != HandleKind.MemberReference) return false;
+		if (ctorHandle.Kind != HandleKind.MemberReference)
+			return false;
 
 		var memberRef = reader.GetMemberReference((MemberReferenceHandle)ctorHandle);
-		if (memberRef.Parent.Kind != HandleKind.TypeReference) return false;
+		if (memberRef.Parent.Kind != HandleKind.TypeReference)
+			return false;
 
 		var typeRef = reader.GetTypeReference((TypeReferenceHandle)memberRef.Parent);
-		return reader.GetString(typeRef.Namespace) == "System.Diagnostics"
-			&& reader.GetString(typeRef.Name) == "DebuggableAttribute";
+		return reader.GetString(typeRef.Namespace) == "System.Diagnostics" && reader.GetString(typeRef.Name) == "DebuggableAttribute";
 	}
 
 	/// <summary>Parses only the Major.Minor.Patch prefix a semantic version starts with, ignoring any
@@ -69,10 +72,7 @@ public static class DllValidator
 	{
 		var core = version.Split('+')[0].Split('-')[0];
 		var parts = core.Split('.');
-		return (
-			int.Parse(parts[0]),
-			parts.Length > 1 ? int.Parse(parts[1]) : 0,
-			parts.Length > 2 ? int.Parse(parts[2]) : 0);
+		return (int.Parse(parts[0]), parts.Length > 1 ? int.Parse(parts[1]) : 0, parts.Length > 2 ? int.Parse(parts[2]) : 0);
 	}
 
 	public static bool DllFilter(IReadOnlyList<string> skipDlls, FileInfo dll) =>
@@ -96,10 +96,14 @@ public static class DllValidator
 				throw new InvalidOperationException($"[version] {relativePath} AssemblyVersion expected {expectedVersion} actual {nonFixedVersion}");
 
 			if (dllVersion.FileVersion != expectedFileVersion)
-				throw new InvalidOperationException($"[version] {relativePath} AssemblyFileVersion expected {expectedFileVersion}, actual: {dllVersion.FileVersion}");
+				throw new InvalidOperationException(
+					$"[version] {relativePath} AssemblyFileVersion expected {expectedFileVersion}, actual: {dllVersion.FileVersion}"
+				);
 
 			if (dllVersion.ProductVersion != expectedVersion)
-				throw new InvalidOperationException($"[version] {relativePath} AsseblyInformationalVersion: expected: {expectedVersion} actual: {dllVersion.ProductVersion} ");
+				throw new InvalidOperationException(
+					$"[version] {relativePath} AsseblyInformationalVersion: expected: {expectedVersion} actual: {dllVersion.ProductVersion} "
+				);
 		}
 
 		if (publicKey is not null)
@@ -116,8 +120,14 @@ public static class DllValidator
 	}
 
 	public static void Scan(
-		IReadOnlyList<FileInfo> dlls, DirectoryInfo tmpFolder, string? expectedVersion, bool fixedVersion,
-		string? publicKey, IReadOnlyList<string> skipDlls, bool skipReleaseMode)
+		IReadOnlyList<FileInfo> dlls,
+		DirectoryInfo tmpFolder,
+		string? expectedVersion,
+		bool fixedVersion,
+		string? publicKey,
+		IReadOnlyList<string> skipDlls,
+		bool skipReleaseMode
+	)
 	{
 		foreach (var dll in dlls)
 		{
