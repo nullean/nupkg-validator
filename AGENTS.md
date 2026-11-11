@@ -9,13 +9,13 @@ distroless container (`ghcr.io/nullean/nupkg-validator`) and a GitHub Action (`a
 | Path | What |
 |---|---|
 | `src/nupkg-validator` | the tool (net8.0 and net10.0), a `Nullean.Argh` CLI; `ValidatorCommand.cs` is the `validate` command |
-| `build/scripts` | the F# build the `mise` tasks and CI call |
+| `build/scripts` | the F# build ([Nullean.Make.Fs](https://www.nuget.org/packages/Nullean.Make.Fs), net11.0) the `mise` tasks and CI call |
 | `build/keys` | the strong-name key the tool's own assembly is signed with |
 | `action.yml` | the GitHub Action: runs the `edge` container image |
 
 ## Commands
 
-mise installs the SDK pinned in `global.json` (plus the net10.0 runtime the build and the package validation run on).
+mise installs the SDK pinned in `global.json` (plus the net10.0 runtime the package validation runs the tool on).
 Run everything through it:
 
 ```bash
@@ -55,3 +55,6 @@ one release label.
   builds rely on. Removing or renaming a flag is a breaking change.
 - Inspect dlls through `System.Reflection.Metadata`, as `DllValidator` does, never by loading them: the tool runs
   as a native-AOT binary.
+- Build targets are Make.Fs `target { }` blocks in `build/scripts/Program.fs` whose commands are Proc.Fs `sh $"…"`
+  lines; values come from `text` inside `shell { }` (`Versions.fs`). Do not call the C# `ProcNet` API from the build.
+  CI calls targets by name (`./build.sh generatepackages -s true`): keep multi-word case names as one word.
