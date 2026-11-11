@@ -29,7 +29,8 @@ internal sealed class ValidatorCommand
 		string? tempFolder = null,
 		bool skipReleaseMode = false,
 		bool noFailOnMissingDlls = false,
-		bool noDependencies = false)
+		bool noDependencies = false
+	)
 	{
 		try
 		{
@@ -46,8 +47,17 @@ internal sealed class ValidatorCommand
 	}
 
 	private static void Run(
-		string path, string? assemblyName, string? dllsToSkipArg, string? expectedVersion, bool notMajorOnly,
-		string? publicKey, string? tempFolder, bool skipReleaseMode, bool noFailOnMissingDlls, bool noDependencies)
+		string path,
+		string? assemblyName,
+		string? dllsToSkipArg,
+		string? expectedVersion,
+		bool notMajorOnly,
+		string? publicKey,
+		string? tempFolder,
+		bool skipReleaseMode,
+		bool noFailOnMissingDlls,
+		bool noDependencies
+	)
 	{
 		var nuGetPackagePath = Path.GetFullPath(path);
 		if (!File.Exists(nuGetPackagePath))
@@ -62,8 +72,8 @@ internal sealed class ValidatorCommand
 		{
 			ZipFile.ExtractToDirectory(nuGetPackagePath, tmpFolder.FullName, overwriteFiles: true);
 
-			var specFile = tmpFolder.GetFiles("*.nuspec", SearchOption.TopDirectoryOnly).FirstOrDefault()
-				?? throw new InvalidOperationException($"No nuspec found in {tmpFolder.FullName}");
+			var specFile = tmpFolder.GetFiles("*.nuspec", SearchOption.TopDirectoryOnly).FirstOrDefault() ??
+				throw new InvalidOperationException($"No nuspec found in {tmpFolder.FullName}");
 
 			if (noDependencies)
 			{
