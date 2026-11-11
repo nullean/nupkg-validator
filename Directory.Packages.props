@@ -5,8 +5,8 @@
 
   <!-- the tool -->
   <ItemGroup>
-    <PackageVersion Include="MinVer" Version="6.0.0" />
-    <PackageVersion Include="Nullean.Argh" Version="0.18.0" />
+    <PackageVersion Include="MinVer" Version="8.0.0" />
+    <PackageVersion Include="Nullean.Argh" Version="0.21.0" />
   </ItemGroup>
 
   <!-- build/scripts -->
@@ -14,8 +14,8 @@
     <!-- under CPM the F# SDK adds no implicit FSharp.Core: this is the version the build resolved before -->
     <PackageVersion Include="FSharp.Core" Version="11.0.101" />
     <PackageVersion Include="Argu" Version="6.2.5" />
-    <PackageVersion Include="Bullseye" Version="6.0.0" />
-    <PackageVersion Include="Fake.Tools.Git" Version="5.20.3" />
+    <PackageVersion Include="Bullseye" Version="6.3.0" />
+    <PackageVersion Include="Fake.Tools.Git" Version="6.2.0" />
     <PackageVersion Include="Proc" Version="0.14.0" />
   </ItemGroup>
 </Project>
