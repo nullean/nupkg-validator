@@ -79,7 +79,7 @@ let main argv =
                   |> Seq.head
                   |> fun p -> Paths.RootRelative p.FullName
               let version = Versions.informational.Value
-              sh $"dotnet run -c Release -f net10.0 --project {toolProject} -- validate {package} -v {version} -a {Paths.ToolName} -k 96c599bbe3e70f5d" }
+              sh $"dotnet run -c Release -f net11.0 --project {toolProject} -- validate {package} -v {version} -a {Paths.ToolName} -k 96c599bbe3e70f5d" }
         | Generateapichanges -> target [] {
               let version = Versions.current.Value
               let tool = Paths.ToolName
@@ -89,7 +89,7 @@ let main argv =
               // lives in "nupkg-validator.any" instead. `-a`: don't fail a first-ever diff against a
               // package id with no release yet; once a version is published this is a no-op.
               // The provider specs are quoted: an unquoted | would pipe.
-              sh $"dotnet assembly-differ diff 'previous-nuget|{tool}.any|{version}|net8.0' 'directory|src/{tool}/bin/Release/net10.0' -a --target {tool} -f github-comment --output {output}" }
+              sh $"dotnet assembly-differ diff 'previous-nuget|{tool}.any|{version}|net10.0' 'directory|src/{tool}/bin/Release/net10.0' -a --target {tool} -f github-comment --output {output}" }
         // Publishes the CLI's native-AOT build as a container image via the .NET SDK's own container
         // support (`dotnet publish -t:PublishContainer`), the same mechanism used for curb — see
         // https://github.com/nullean/curb/pull/72. linux-x64 only for now; a second RID becomes a second
@@ -104,12 +104,12 @@ let main argv =
         // works, with no ghcr.io credentials configured there. Only the build job, which does log in, passes
         // --push.
         | Publishcontainers -> target [] {
-              let baseImage = "mcr.microsoft.com/dotnet/runtime-deps:10.0-noble-chiseled"
+              let baseImage = "mcr.microsoft.com/dotnet/runtime-deps:11.0-resolute-chiseled"
               // MSBuild reads the quotes: without them the tags' `;` would split the property
               let tags = $"ContainerImageTags=\"{Packaging.containerImageTags Versions.current.Value}\""
               if push.Value then
-                  sh $"dotnet publish {toolProject} -c Release -f net10.0 -r linux-x64 /t:PublishContainer -p DebugType=none -p ContainerBaseImage={baseImage} -p ContainerRepository={Paths.Repository} -p {tags} -p ContainerUser=1001:1001 -p ContainerRegistry=ghcr.io"
+                  sh $"dotnet publish {toolProject} -c Release -f net11.0 -r linux-x64 /t:PublishContainer -p DebugType=none -p ContainerBaseImage={baseImage} -p ContainerRepository={Paths.Repository} -p {tags} -p ContainerUser=1001:1001 -p ContainerRegistry=ghcr.io"
               else
-                  sh $"dotnet publish {toolProject} -c Release -f net10.0 -r linux-x64 /t:PublishContainer -p DebugType=none -p ContainerBaseImage={baseImage} -p ContainerRepository={Paths.Repository} -p {tags} -p ContainerUser=1001:1001" }
+                  sh $"dotnet publish {toolProject} -c Release -f net11.0 -r linux-x64 /t:PublishContainer -p DebugType=none -p ContainerBaseImage={baseImage} -p ContainerRepository={Paths.Repository} -p {tags} -p ContainerUser=1001:1001" }
 
     app.RunAsync(argv).GetAwaiter().GetResult()

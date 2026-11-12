@@ -8,15 +8,14 @@ distroless container (`ghcr.io/nullean/nupkg-validator`) and a GitHub Action (`a
 
 | Path | What |
 |---|---|
-| `src/nupkg-validator` | the tool (net8.0 and net10.0), a `Nullean.Argh` CLI; `ValidatorCommand.cs` is the `validate` command |
+| `src/nupkg-validator` | the tool (net10.0 and net11.0), a `Nullean.Argh` CLI; `ValidatorCommand.cs` is the `validate` command |
 | `build/scripts` | the F# build ([Nullean.Make.Fs](https://www.nuget.org/packages/Nullean.Make.Fs), net11.0) the `mise` tasks and CI call |
 | `build/keys` | the strong-name key the tool's own assembly is signed with |
 | `action.yml` | the GitHub Action: runs the `edge` container image |
 
 ## Commands
 
-mise installs the SDK pinned in `global.json` (plus the net10.0 runtime the package validation runs the tool on).
-Run everything through it:
+mise installs the SDK pinned in `global.json`. Run everything through it:
 
 ```bash
 mise run build    # build the solution
