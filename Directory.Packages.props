@@ -5,8 +5,8 @@
 
   <!-- the tool -->
   <ItemGroup>
-    <PackageVersion Include="MinVer" Version="6.0.0" />
-    <PackageVersion Include="Nullean.Argh" Version="0.18.0" />
+    <PackageVersion Include="MinVer" Version="8.0.0" />
+    <PackageVersion Include="Nullean.Argh" Version="0.27.2" />
   </ItemGroup>
 
   <!-- build/scripts -->
@@ -14,6 +14,6 @@
     <!-- under CPM the F# SDK adds no implicit FSharp.Core; Nullean.Make.Fs needs 11.0.100 or later -->
     <PackageVersion Include="FSharp.Core" Version="11.0.101" />
     <!-- brings Proc and Proc.Fs -->
-    <PackageVersion Include="Nullean.Make.Fs" Version="0.25.0" />
+    <PackageVersion Include="Nullean.Make.Fs" Version="0.27.2" />
   </ItemGroup>
 </Project>

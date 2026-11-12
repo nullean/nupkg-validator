@@ -58,4 +58,4 @@ one release label.
   as a native-AOT binary.
 - Build targets are Make.Fs `target { }` blocks in `build/scripts/Program.fs` whose commands are Proc.Fs `sh $"…"`
   lines; values come from `text` inside `shell { }` (`Versions.fs`). Do not call the C# `ProcNet` API from the build.
-  CI calls targets by name (`./build.sh generatepackages -s true`): keep multi-word case names as one word.
+  CI calls targets by name (`./build.sh generatepackages -s`): keep multi-word case names as one word.
