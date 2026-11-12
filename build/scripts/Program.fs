@@ -86,10 +86,10 @@ let main argv =
               // The plain "nupkg-validator" package id is just a DotnetToolSettings.xml v2 shim pointing
               // at per-RID sub-packages (see Generatepackages) - it ships no managed assembly of its own,
               // so NuGetAssemblyProvider would find 0 assemblies there. The portable, signed managed build
-              // lives in "nupkg-validator.any" instead. `-a true`: don't fail a first-ever diff against a
+              // lives in "nupkg-validator.any" instead. `-a`: don't fail a first-ever diff against a
               // package id with no release yet; once a version is published this is a no-op.
               // The provider specs are quoted: an unquoted | would pipe.
-              sh $"dotnet assembly-differ 'previous-nuget|{tool}.any|{version}|net8.0' 'directory|src/{tool}/bin/Release/net10.0' -a true --target {tool} -f github-comment --output {output}" }
+              sh $"dotnet assembly-differ diff 'previous-nuget|{tool}.any|{version}|net8.0' 'directory|src/{tool}/bin/Release/net10.0' -a --target {tool} -f github-comment --output {output}" }
         // Publishes the CLI's native-AOT build as a container image via the .NET SDK's own container
         // support (`dotnet publish -t:PublishContainer`), the same mechanism used for curb — see
         // https://github.com/nullean/curb/pull/72. linux-x64 only for now; a second RID becomes a second
