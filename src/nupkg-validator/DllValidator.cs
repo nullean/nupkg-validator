@@ -111,7 +111,7 @@ public static class DllValidator
 			var token = $"PublicKeyToken={publicKey}";
 			if (!(namedAssembly.FullName ?? "").Contains(token))
 				throw new InvalidOperationException($"[version] {dll.Name} is NOT publicly signed with expected token: {publicKey}");
-			Console.Write($"[version] {dll.Name} properly signed with token: {publicKey}");
+			Console.WriteLine($"[version] {dll.Name} properly signed with token: {publicKey}");
 		}
 
 		var releaseCheck = skipReleaseMode || IsReleaseMode(dll);
