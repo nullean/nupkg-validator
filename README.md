@@ -111,7 +111,7 @@ The tool ships as one package per platform. Install the root package; the .NET S
 |---|---|---|
 | [`nupkg-validator`](src/nupkg-validator/README.md) | the tool; points the SDK at the package for your platform | [![NuGet](https://img.shields.io/nuget/v/nupkg-validator?style=flat-square)](https://www.nuget.org/packages/nupkg-validator) |
 | `nupkg-validator.<rid>` | the native-AOT build for `linux-x64`, `linux-arm64`, `win-x64`, `win-arm64` and `osx-arm64` | [![NuGet](https://img.shields.io/nuget/v/nupkg-validator.linux-x64?style=flat-square)](https://www.nuget.org/packages/nupkg-validator.linux-x64) |
-| `nupkg-validator.any` | the framework-dependent fallback (net8.0, net10.0) for every other platform | [![NuGet](https://img.shields.io/nuget/v/nupkg-validator.any?style=flat-square)](https://www.nuget.org/packages/nupkg-validator.any) |
+| `nupkg-validator.any` | the framework-dependent fallback (net10.0, net11.0) for every other platform | [![NuGet](https://img.shields.io/nuget/v/nupkg-validator.any?style=flat-square)](https://www.nuget.org/packages/nupkg-validator.any) |
 
 ## Learn more
 
