@@ -1,10 +1,10 @@
 module Program
 
 open System.IO
-open Nullean.Make.Fs
+open Nullean.Runna.Fs
 open Proc.Fs
 
-/// The build's targets; `./build.sh --help` lists them with these descriptions. Make.Fs turns a case name into
+/// The build's targets; `./build.sh --help` lists them with these descriptions. Runna.Fs turns a case name into
 /// kebab-case, so the multi-word ones are spelled as one word: CI calls `generatepackages`, `publishcontainers`, ...
 type Target =
     /// clean known output locations
@@ -31,7 +31,7 @@ let private toolProject = Paths.RootRelative Paths.ToolProject.FullName
 
 [<EntryPoint>]
 let main argv =
-    let app = MakeApp<Target>("./build.sh", None)
+    let app = RunnaApp<Target>("./build.sh", None)
     let push =
         app.Flag("--push", desc = "publishcontainers only: push the built image to ghcr.io instead of building it into the local Docker daemon")
 
