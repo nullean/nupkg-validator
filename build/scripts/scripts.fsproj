@@ -3,14 +3,14 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net11.0</TargetFramework>
-    <!-- Nullean.Make.Fs reads the target descriptions from the /// comments in Program.fs -->
+    <!-- Runna.Fs reads the target descriptions from the /// comments in Program.fs -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IsPackable>false</IsPackable>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FSharp.Core" />
-    <PackageReference Include="Nullean.Make.Fs" />
+    <PackageReference Include="Runna.Fs" />
   </ItemGroup>
 
   <ItemGroup>
